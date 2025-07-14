@@ -1,0 +1,11 @@
+spring:
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+  datasource:
+    url: jdbc:tc:postgresql:14://localhost/test-database
+logging:
+  level:
+    de.peterpunch.relink: info

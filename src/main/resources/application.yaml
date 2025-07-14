@@ -7,7 +7,6 @@ spring:
     url: jdbc:postgresql://localhost/dev
     username: relink
     password: relink
-    driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 2
   sql:
@@ -30,6 +29,9 @@ spring:
     locations: classpath:db/migration
     enabled: true
     validate-on-migrate: false
+relink:
+  hashgenerator:
+    character-length: 4
 logging:
   level:
     de.peterpunch.relink: info
