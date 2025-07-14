@@ -5,4 +5,5 @@ import org.springframework.data.repository.CrudRepository
 
 interface ShortLinkRepo : CrudRepository<ShortLink, Long> {
     fun existsShortLinkByHash(hash: String): Boolean
+    fun findShortLinkByHash(hash: String): ShortLink?
 }

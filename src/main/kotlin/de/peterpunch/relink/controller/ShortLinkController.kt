@@ -5,11 +5,14 @@ import de.peterpunch.relink.dto.CreateShortLinkDto
 import de.peterpunch.relink.dto.ShortLinkDto
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
+import java.net.URI
 
 @RestController
 @RequestMapping("/relink/api/")
@@ -26,5 +29,13 @@ class ShortLinkController(
         val shortLink = shortLinkService.createShortLink(createShortLinkDto.url.toString())
 
         return ShortLinkDto(url = shortLink.destinationUrl, hash = shortLink.hash)
+    }
+
+    @GetMapping(
+        value = ["short-links/{hash}"],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
+    fun getShortLink(@RequestParam(required = true) hash: String): ShortLinkDto {
+        return ShortLinkDto(url = URI("https://hardcoded.com").toURL(), hash = hash)
     }
 }

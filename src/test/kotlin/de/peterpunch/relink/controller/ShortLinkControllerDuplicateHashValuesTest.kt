@@ -50,5 +50,4 @@ class ShortLinkControllerDuplicateHashValuesTest @Autowired constructor(
             .andExpect(MockMvcResultMatchers.jsonPath("\$.url").value("http://example.com"))
             .andExpect(MockMvcResultMatchers.jsonPath("\$.hash").value(Matchers.hasLength(4)))
     }
-
 }

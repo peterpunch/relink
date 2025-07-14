@@ -1,12 +1,16 @@
 package de.peterpunch.relink.domain.service
 
 import de.peterpunch.relink.domain.entity.ShortLink
+import de.peterpunch.relink.domain.error.ShortLinkNotFoundException
 import de.peterpunch.relink.domain.repository.ShortLinkRepo
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.*
 import org.mockito.junit.jupiter.MockitoExtension
+import java.net.URI
+import java.time.OffsetDateTime
+import kotlin.jvm.java
 
 @ExtendWith(MockitoExtension::class)
 class ShortLinkServiceTest {
@@ -62,5 +66,39 @@ class ShortLinkServiceTest {
         Mockito.verify(shortLinkRepo).save(captor.capture())
         Assertions.assertThat(captor.value.hash).isEqualTo(secondHash)
         Assertions.assertThat(captor.value).isSameAs(shortLink)
+    }
+
+    @Test
+    fun `getShortLinkByHash uses repo correctly`() {
+        val hash = "ABCD"
+        val expectedShortLink = ShortLink(
+            hash = hash,
+            destinationUrl = URI.create("https://example.com").toURL(),
+            createdAt = OffsetDateTime.now(),
+            id = 1
+        )
+
+        Mockito.`when`(shortLinkRepo.findShortLinkByHash(hash)).thenReturn(
+            expectedShortLink
+        )
+
+        val shortLinkByHash = shortLinkService.getShortLinkByHash(hash)
+
+        Mockito.verify(shortLinkRepo).findShortLinkByHash(hash)
+        Assertions.assertThat(shortLinkByHash).isNotNull
+        Assertions.assertThat(shortLinkByHash).isSameAs(expectedShortLink)
+    }
+
+    @Test
+    fun `getShortLinkByHash throws ShortLinkNotFoundException`() {
+        val hash = "ABCD"
+        Mockito.`when`(shortLinkRepo.findShortLinkByHash(hash)).thenReturn(
+            null
+        )
+
+        org.junit.jupiter.api.Assertions.assertThrows(
+            ShortLinkNotFoundException::class.java,
+            { shortLinkService.getShortLinkByHash(hash) }
+        )
     }
 }

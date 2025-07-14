@@ -1,6 +1,7 @@
 package de.peterpunch.relink.domain.service
 
 import de.peterpunch.relink.domain.entity.ShortLink
+import de.peterpunch.relink.domain.error.ShortLinkNotFoundException
 import de.peterpunch.relink.domain.repository.ShortLinkRepo
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
@@ -24,5 +25,9 @@ class ShortLinkService(
                 hash = hash, destinationUrl = URI(url).toURL()
             )
         )
+    }
+
+    fun getShortLinkByHash(hash: String): ShortLink {
+        return shortLinkRepo.findShortLinkByHash(hash) ?: throw ShortLinkNotFoundException(hash)
     }
 }
