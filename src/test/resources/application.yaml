@@ -1,0 +1,21 @@
+spring:
+  jpa:
+    hibernate:
+      ddlAuto: validate
+    properties:
+      hibernate:
+        show_sql: false
+        format_sql: true
+  datasource:
+    url: jdbc:tc:postgresql:14://localhost/test-database
+  flyway:
+    baseline-on-migrate: true
+    schemas: relink
+    locations: classpath:db/migration
+    enabled: true
+  config:
+    activate:
+      on-profile: test
+logging:
+  level:
+    de.peterpunch.relink: info

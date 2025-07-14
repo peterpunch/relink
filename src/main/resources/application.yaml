@@ -1,0 +1,35 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: reLink
+  datasource:
+    url: jdbc:postgresql://localhost/dev
+    username: relink
+    password: relink
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 2
+  sql:
+    init:
+      platform: postgresql
+  data:
+    jpa:
+      repositories:
+        bootstrap-mode: default
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        show_sql: false
+        format_sql: false
+  flyway:
+    baseline-on-migrate: true
+    schemas: relink
+    locations: classpath:db/migration
+    enabled: true
+    validate-on-migrate: false
+logging:
+  level:
+    de.peterpunch.relink: info

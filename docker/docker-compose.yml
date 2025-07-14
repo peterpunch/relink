@@ -1,0 +1,13 @@
+#version: 11
+services:
+  postgres:
+    image: postgres:14
+    volumes:
+      - ./postgres/initdb/init.sql:/docker-entrypoint-initdb.d/init.sql
+    hostname: postgres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: dev
+      POSTGRES_DB: dev
+      POSTGRES_PASSWORD: dev123
