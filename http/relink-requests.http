@@ -1,0 +1,14 @@
+### post short link
+POST http://{{relink-host}}/relink/api/short-links
+Content-Type: application/json
+
+{
+  "url": "https://www.rebuy.de/i,15513615/handy/apple-iphone-16-pro-128gb-titan-schwarz"
+}
+
+> {%
+    client.global.set("hash", response.body.hash);
+%}
+
+### get short link
+GET http://{{relink-host}}/relink/api/short-links/{{hash}}
