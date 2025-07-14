@@ -24,10 +24,10 @@ class ShortLinkControllerTest @Autowired constructor(
     }
 
     @Test
-    @Sql("/database/clear.sql")
+    @Sql("/database/clear.sql", "/database/add-short-link.sql")
     fun `postShortLink returns 201 CREATED`() {
 
-        val createShortLinkDto = CreateShortLinkDto(URI.create("http://example.com").toURL())
+        val createShortLinkDto = CreateShortLinkDto(URI.create("https://example.com").toURL())
         logger.info(objectMapper.writeValueAsString(createShortLinkDto))
         mockMvc.perform(
             MockMvcRequestBuilders.post("/relink/api/short-links")
@@ -39,7 +39,29 @@ class ShortLinkControllerTest @Autowired constructor(
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isCreated)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(MockMvcResultMatchers.jsonPath("\$.url").value("http://example.com"))
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.url").value("https://example.com"))
             .andExpect(MockMvcResultMatchers.jsonPath("\$.hash").value(Matchers.hasLength(4)))
+    }
+
+    @Test
+    @Sql("/database/clear.sql", "/database/add-short-link.sql")
+    fun `getShortLink returns 200 OK`() {
+        mockMvc.perform(MockMvcRequestBuilders.get("/relink/api/short-links/ABCD"))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.url").value("https://example.com"))
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.hash").value(Matchers.hasLength(4)))
+
+    }
+
+    @Test
+    @Sql("/database/clear.sql", "/database/add-short-link.sql")
+    fun `getShortLink returns 404 Not Found`() {
+        mockMvc.perform(MockMvcRequestBuilders.get("/relink/api/short-links/1234"))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.status().isNotFound)
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.status").value(404))
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.message").value("ShortLink with hash 1234 not found"))
     }
 }
