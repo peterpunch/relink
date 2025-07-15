@@ -4,6 +4,7 @@ import de.peterpunch.relink.domain.error.ErrorMessage
 import de.peterpunch.relink.domain.error.RelinkException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 
@@ -18,6 +19,16 @@ class ErrorHandler {
         )
 
         return ResponseEntity(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+
+    @ExceptionHandler
+    fun handleIllegalArgumentException(exception: HttpMessageNotReadableException): ResponseEntity<ErrorMessage> {
+        val errorMessage = ErrorMessage(
+            HttpStatus.BAD_REQUEST.value(),
+            exception.message
+        )
+
+        return ResponseEntity(errorMessage, HttpStatus.BAD_REQUEST)
     }
 
     @ExceptionHandler

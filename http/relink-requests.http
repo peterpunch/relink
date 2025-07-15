@@ -1,3 +1,11 @@
+### post short link with invalid url
+POST http://{{relink-host}}/relink/api/short-links
+Content-Type: application/json
+
+{
+  "url": "not valid"
+}
+
 ### post short link
 POST http://{{relink-host}}/relink/api/short-links
 Content-Type: application/json

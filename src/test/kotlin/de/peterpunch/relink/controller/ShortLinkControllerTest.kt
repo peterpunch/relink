@@ -44,6 +44,32 @@ class ShortLinkControllerTest @Autowired constructor(
     }
 
     @Test
+    fun `postShortLink returns 400 BAD_REQUEST on invalid url`() {
+        val invalidUrl = """
+            { "url": "invalid url" }
+        """
+        logger.info(invalidUrl.trimIndent())
+
+        mockMvc.perform(
+            MockMvcRequestBuilders.post("/relink/api/short-links")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(invalidUrl)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+
+        )
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.status().isBadRequest)
+            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(MockMvcResultMatchers.jsonPath("\$.status").value(400))
+            .andExpect(
+                MockMvcResultMatchers.jsonPath("\$.message")
+                    .value(
+                        """JSON parse error: Cannot deserialize value of type `java.net.URL` from String "invalid url": not a valid textual representation, problem: no protocol: invalid url"""
+                    )
+            )
+    }
+
+    @Test
     @Sql("/database/clear.sql", "/database/add-short-link.sql")
     fun `getShortLink returns 200 OK`() {
         mockMvc.perform(MockMvcRequestBuilders.get("/relink/api/short-links/ABCD"))
