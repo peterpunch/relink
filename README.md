@@ -133,7 +133,7 @@ cd reLink
 
 3. Use Docker (as described above) for PostgreSQL, or configure a PostgreSQL database instance.
 
-4. Update your PostgreSQL configuration (e.g., credentials, database name) in `application.properties`.
+4. Update your PostgreSQL configuration (e.g., credentials, database name) in `application.yaml`.
 
 5. Run the project using Maven:
 ```shell script
