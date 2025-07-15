@@ -7,7 +7,7 @@ import java.time.OffsetDateTime
 
 @Entity
 @Table(name = "short_links", schema = "relink")
-class ShortLink(
+data class ShortLink(
 
     @Column(nullable = false, unique = true, updatable = false)
     var hash: String,

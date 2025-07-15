@@ -15,7 +15,7 @@ class ErrorHandler {
     fun handleGeneralException(exception: Exception): ResponseEntity<ErrorMessage> {
         val errorMessage = ErrorMessage(
             HttpStatus.INTERNAL_SERVER_ERROR.value(),
-            exception.message
+            exception.message ?: ""
         )
 
         return ResponseEntity(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR)
@@ -25,7 +25,7 @@ class ErrorHandler {
     fun handleIllegalArgumentException(exception: HttpMessageNotReadableException): ResponseEntity<ErrorMessage> {
         val errorMessage = ErrorMessage(
             HttpStatus.BAD_REQUEST.value(),
-            exception.message
+            exception.message ?: ""
         )
 
         return ResponseEntity(errorMessage, HttpStatus.BAD_REQUEST)
@@ -35,7 +35,7 @@ class ErrorHandler {
     fun handleFintoolException(exception: RelinkException): ResponseEntity<ErrorMessage> {
         val errorMessage = ErrorMessage(
             exception.status.value(),
-            exception.message
+            exception.message ?: ""
         )
         return ResponseEntity(errorMessage, exception.status)
     }
